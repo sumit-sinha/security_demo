@@ -99,7 +99,7 @@ app.route("/catalog")
 		connection.connect();
 
 		connection.query("select * from product where id = " + request.query.product, function (err, rows, fields) {
-			if (err) {
+			if (err || rows == null || rows.length === 0) {
 				response.render("catalog", {
 					product: {},
 					paymentLink: null,
