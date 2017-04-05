@@ -100,7 +100,7 @@ app.route("/catalog")
 
 		connection.connect();
 
-		connection.query("select * from product where id = " + product.id, function (err, rows, fields) {
+		connection.query("select * from product where id = " + request.query.product, function (err, rows, fields) {
 			if (err) {
 				response.render("catalog", {
 					product: {},
@@ -118,7 +118,7 @@ app.route("/catalog")
 					name: rows[0].name,
 					description: rows[0].description
 				},
-				paymentLink: domain + "payment?product=" + product.id,
+				paymentLink: domain + "payment?product=" + rows[0].id,
 				homePageLink: homePageLink
 			});
 		});
