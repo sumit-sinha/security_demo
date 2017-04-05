@@ -87,9 +87,7 @@ app.route("/")
 
 app.route("/catalog")
 	.get((request, response) => {
-		let product = products[request.query.product],
-			domain = "http://localhost:8080/",
-			homePageLink = domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" + product.id + "&LAST_PRODUCT_NAME=" + product.name;
+		let domain = "http://localhost:8080/";
 
 		var connection = mysql.createConnection({
 			host     : 'localhost',
@@ -105,12 +103,12 @@ app.route("/catalog")
 				response.render("catalog", {
 					product: {},
 					paymentLink: null,
-					homePageLink: homePageLink
+					homePageLink: null
 				});
 			};
 
-			console.log(rows);
-			console.log(fields);
+			let homePageLink = domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
+						+ request.query.product + "&LAST_PRODUCT_NAME=" + rows[0].name;
 
 			response.render("catalog", {
 				product: {
@@ -128,7 +126,6 @@ app.route("/catalog")
 
 app.route("/payment")
 	.get((request, response) => {
-		let product = products[request.query.product];
 		response.render("payment", {});
 	});
 
