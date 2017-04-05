@@ -4,26 +4,11 @@ const express = require("express"),
 	app = express(),
 	bodyParser = require("body-parser"),
 	path = require("path"),
-	session = require("express-session"),
-	MongoStore = require("connect-mongo")(session);
+	mysql = require("mysql");
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static(path.join(__dirname + "/../static")));
-
-/*app.use(session({
-	secret: "itsmysecret",
-	resave: false,
-	saveUninitialized: true,
-	cookie: {
-		secure: false,
-		httpOnly: false
-	},
-	store: new MongoStore({
-		url: "mongodb://127.0.0.1/"
-	})
-}));*/
-
 
 app.set('view engine', 'pug');
 app.listen(8080, () => {
@@ -103,12 +88,42 @@ app.route("/")
 app.route("/catalog")
 	.get((request, response) => {
 		let product = products[request.query.product],
-			domain = "http://localhost:8080/";
-		response.render("catalog", {
-			product: product,
-			paymentLink: domain + "payment?product=" + product.id,
-			homePageLink: domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" + product.id + "&LAST_PRODUCT_NAME=" + product.name
+			domain = "http://localhost:8080/",
+			homePageLink = domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" + product.id + "&LAST_PRODUCT_NAME=" + product.name;
+
+		var connection = mysql.createConnection({
+			host     : 'localhost',
+			user     : 'root',
+		 	password : 'root',
+			database : 'shoppingparadise'
 		});
+
+		connection.connect();
+
+		connection.query("select * from product where id = " + product.id, function (err, rows, fields) {
+			if (err) {
+				response.render("catalog", {
+					product: {},
+					paymentLink: null,
+					homePageLink: homePageLink
+				});
+			};
+
+			console.log(rows);
+			console.log(fields);
+
+			response.render("catalog", {
+				product: {
+					id: rows[0].id,
+					name: rows[0].name,
+					description: rows[0].description
+				},
+				paymentLink: domain + "payment?product=" + product.id,
+				homePageLink: homePageLink
+			});
+		});
+
+		connection.end();
 	});
 
 app.route("/payment")
