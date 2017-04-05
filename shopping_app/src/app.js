@@ -105,6 +105,8 @@ app.route("/catalog")
 					paymentLink: null,
 					homePageLink: null
 				});
+
+				return;
 			};
 
 			let homePageLink = domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
