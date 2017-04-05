@@ -108,7 +108,7 @@ app.route("/catalog")
 				return;
 			};
 
-			let homePageLink = domain + "/?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
+			let homePageLink = "/?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
 						+ request.query.product + "&LAST_PRODUCT_NAME=" + rows[0].name;
 
 			response.render("catalog", {
@@ -117,7 +117,7 @@ app.route("/catalog")
 					name: rows[0].name,
 					description: rows[0].description
 				},
-				paymentLink: domain + "payment?product=" + rows[0].id,
+				paymentLink: "/payment?product=" + rows[0].id,
 				homePageLink: homePageLink
 			});
 		});
