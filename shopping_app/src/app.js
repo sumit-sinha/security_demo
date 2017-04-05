@@ -87,7 +87,6 @@ app.route("/")
 
 app.route("/catalog")
 	.get((request, response) => {
-		let domain = "http://localhost:8080/";
 
 		var connection = mysql.createConnection({
 			host     : 'localhost',
@@ -109,7 +108,7 @@ app.route("/catalog")
 				return;
 			};
 
-			let homePageLink = domain + "?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
+			let homePageLink = domain + "/?FROM_PRODUCT_PAGE=TRUE&LAST_PRODUCT_LINK=/catalog?product=" 
 						+ request.query.product + "&LAST_PRODUCT_NAME=" + rows[0].name;
 
 			response.render("catalog", {
